@@ -1684,7 +1684,7 @@ body {
 }
 
 /* alert */
-.alert-toast {
+.alert-toast,.alert-miss {
   position: fixed;
   top: 5vh;
   right: 5vw;
@@ -1711,8 +1711,7 @@ body {
     visibility: visible;
 }
 
-.warn {
-}
+
 
 /* Close button */
 .alert-close {

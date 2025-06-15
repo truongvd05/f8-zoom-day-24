@@ -113,18 +113,48 @@ function saveTodoTask() {
 // add Task
 formData.onsubmit = function (e) {
     e.preventDefault();
+
+    const inputTitle = $(".form-input");
     // lấy dữ liệu từ form
     const newTask = Object.fromEntries(new FormData(formData));
+    // lọc ra title có sẵn đễ kiểm tra xem có trùng không
     const allTitle = todoTask.map((task) => task.title.toLowerCase());
-    const inputTitle = $(".form-input");
+    // lấy dữ liệu title để kiểm tra xem có trùng không
     const value = inputTitle.value.toLowerCase();
+    // duyện qua các key và value
+    const checkInput = Object.entries(newTask);
+    // lọc các key có value rỗng
+    const missValue = checkInput.filter(([key, value]) => value === "".trim());
+    // in ra thông báo nếu chưa nhập đủ trường
+    console.log(missValue);
+    if (missValue.length > 0) {
+        // xóa thông báo cũ
+        const oldAlert = document.querySelector(".alert-miss");
+        if (oldAlert) oldAlert.remove();
+        const html = missValue
+            .map(
+                (key) => `<div class="alert-content">
+                        <strong>⚠️ Cảnh báo:</strong> thiếu ${key} kìa bạn
+                        <button class="alert-close">×</button>
+                    </div>
+                `
+            )
+            .join("");
+        const body = document.body;
+        const div = document.createElement("div");
+        div.className = "alert-miss";
+        div.innerHTML = html;
+        body.append(div);
+        const missAlert = $(".alert-miss");
+        missAlert.classList.add("turn-off");
 
+        return setTimeout(() => missAlert.classList.remove("turn-off"), 3000);
+    }
+    // thông báo nếu trung title
     if (allTitle.includes(value)) {
-        console.log(closeAlert);
         closeAlert.classList.add("turn-off");
         return setTimeout(() => closeAlert.classList.remove("turn-off"), 3000);
     }
-
     //  nếu có index tức đang sửa form
     if (editIndex) {
         todoTask[editIndex] = newTask;
@@ -135,7 +165,6 @@ formData.onsubmit = function (e) {
         todoTask.unshift(newTask);
     }
 
-    // forcus form
     saveTodoTask();
     closeForm();
     renderTask();
@@ -201,6 +230,8 @@ function renderTask(data = todoTask) {
 // show modal
 function openForm() {
     form.classList.add("show");
+    // forcus form
+
     setTimeout(() => titleInput.focus(), 100);
 }
 
