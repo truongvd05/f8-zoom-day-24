@@ -31,13 +31,15 @@ btnCompleted.onclick = function (e) {
         renderTask(marks);
     }
 };
+
+// đóng form
 fullModal.onclick = function (e) {
     const a = e.target.closest(".modal");
     if (!a) {
         closeForm();
     }
 };
-// đóng warn thủ công
+// đóng toast thủ công
 alertBtn.onclick = function () {
     closeAlert.classList.remove("turn-off");
 };
@@ -98,6 +100,18 @@ task.onclick = function (e) {
             todoTask.splice(taskIndex, 1);
             saveTodoTask();
             renderTask();
+            html = `<div class="alert-content success">
+        <strong>✅ Thành công:</strong>
+        <button class="alert-close">×</button>
+    </div>`;
+            const div = document.createElement("div");
+            div.className = "alert-miss";
+            div.innerHTML = html;
+            body.append(div);
+            const missAlert = $(".alert-miss");
+            missAlert.classList.add("turn-off");
+
+            setTimeout(() => missAlert.classList.remove("turn-off"), 3000);
         }
     }
 
