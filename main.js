@@ -14,6 +14,8 @@ const btnCompleted = $(".tab-button-complete");
 const btnActive = $(".btn-active");
 const alertBtn = $(".alert-close");
 const closeAlert = $(".alert-toast");
+const fullModal = $(".modal-overlay");
+const body = document.body;
 
 const closeModal = $$(".modal-close");
 
@@ -29,7 +31,12 @@ btnCompleted.onclick = function (e) {
         renderTask(marks);
     }
 };
-
+fullModal.onclick = function (e) {
+    const a = e.target.closest(".modal");
+    if (!a) {
+        closeForm();
+    }
+};
 // đóng warn thủ công
 alertBtn.onclick = function () {
     closeAlert.classList.remove("turn-off");
@@ -128,7 +135,6 @@ formData.onsubmit = function (e) {
     // in ra thông báo nếu chưa nhập đủ trường
     console.log(missValue);
     if (missValue.length > 0) {
-        // xóa thông báo cũ
         const oldAlert = document.querySelector(".alert-miss");
         if (oldAlert) oldAlert.remove();
         const html = missValue
@@ -140,7 +146,6 @@ formData.onsubmit = function (e) {
                 `
             )
             .join("");
-        const body = document.body;
         const div = document.createElement("div");
         div.className = "alert-miss";
         div.innerHTML = html;
@@ -166,8 +171,21 @@ formData.onsubmit = function (e) {
     }
 
     saveTodoTask();
-    closeForm();
     renderTask();
+
+    html = `<div class="alert-content success">
+        <strong>✅ Thành công:</strong>
+        <button class="alert-close">×</button>
+    </div>`;
+    const div = document.createElement("div");
+    div.className = "alert-miss";
+    div.innerHTML = html;
+    body.append(div);
+    const missAlert = $(".alert-miss");
+    missAlert.classList.add("turn-off");
+
+    setTimeout(() => missAlert.classList.remove("turn-off"), 3000);
+    closeForm();
 };
 
 // escapese HTML
